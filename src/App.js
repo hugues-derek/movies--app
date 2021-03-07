@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Movie from "./components/movie";
+import Heading from "./components/heading";
+import Footer from "./components/footer";
 
 function App() {
 	const FEATURED_API =
@@ -19,27 +21,28 @@ function App() {
 	const getData = async () => {
 		const response = await fetch(FEATURED_API);
 		const data = await response.json();
-		console.log(data);
+
 		if (data.results) {
 			setmovies(data.results);
 		}
 	};
 	const handleOnSubmit = (e) => {
 		e.preventDefault();
+
 		fetch(SEARCH_API + valueTerm)
-			.then((res) => {
-				res.json();
-			})
-			.then((data) => setmovies(data.results))
-			.catch((err) => console.log(err));
+			.then((res) => res.json())
+			.then((data) => (valueTerm !== "" ? setmovies(data.results) : null));
 	};
+
 	const handleOnChange = (e) => {
+		// ici se trouve la probable erreur
 		setvalueTerm(e.target.value);
 	};
 
 	return (
 		<>
 			<header>
+				<Heading title="Movies" />
 				<form onSubmit={handleOnSubmit}>
 					<input
 						className="search"
@@ -55,6 +58,7 @@ function App() {
 					<Movie key={movie.id} {...movie} />
 				))}
 			</div>
+			<Footer />
 		</>
 	);
 }
